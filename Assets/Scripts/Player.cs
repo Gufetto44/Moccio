@@ -2,29 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : Unit {
 
-	public float MovementSpeed = 1f;
-	public float Health = 5f;
-		
 
-	void Start () {
-		
-	}
-	
+	// Start e Update del player sono ereditati dalla classe Unit
 
+
+	// Simile ad Update, ma viene usato per sincronizzare gli update con la fisica
 	void FixedUpdate ()
 	{
-		// Ad ogni update controlliamo l'input e lo passiamo alla funzione Move
+		// Ad ogni update controlliamo l'input degli assi (WASD, freccette o joystick) e lo passiamo alla funzione Move
 		Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+
+		// Abilita il trigger del giocatore per interagire con gli oggetti solo quando premiamo F.
+		EnableTrigger(Input.GetKeyDown(KeyCode.F));
+
 	}
 
-
-	// Muove questo oggetto nella direzione indicata
-	void Move(Vector2 direction)
-	{
-		// transform.position contiene la posizione dell'oggetto a cui è attaccato questo script
-		// lo spostiamo nella direzione passata come parametro, moltiplicata per la velocità.
-		transform.position += (Vector3)(direction * MovementSpeed * Time.deltaTime);
-	}
+	
 }

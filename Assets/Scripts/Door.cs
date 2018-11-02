@@ -6,6 +6,8 @@ public class Door : MonoBehaviour {
 
 	public bool IsOpen;
 
+	float _direction = -1f;
+
 	Vector3 _defaultRotation;
 	Vector3 _currentRotation;
 
@@ -17,11 +19,10 @@ public class Door : MonoBehaviour {
 	}
 	
 
-
 	void Update ()
 	{
 		if (IsOpen)
-			_currentRotation.z = Mathf.MoveTowards(_currentRotation.z, _defaultRotation.z+90f, Time.deltaTime * 150f);
+			_currentRotation.z = Mathf.MoveTowards(_currentRotation.z, _defaultRotation.z+(90f*_direction), Time.deltaTime * 150f);
 		else
 			_currentRotation.z = Mathf.MoveTowards(_currentRotation.z, _defaultRotation.z, Time.deltaTime * 150f);
 
@@ -31,19 +32,17 @@ public class Door : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		// Quando qualcosa entra all'interno del trigger della porta, controlliamo se ha lo script di un giocatore attaccato
-		// quindi cambiamo lo stato della porta di conseguenza.
-		Player player = other.gameObject.GetComponent<Player>();
+		
+		// In questo caso vogliamo far interagire il trigger della porta solo con gli altri collider marcati come trigger, quindi
+		// scartiamo a priori le collisioni con collider non trigger.
+		if (!other.isTrigger)
+			return;
 
-		if (player != null)
-			IsOpen = true;
-	}
+		// Scartiamo anche i trigger che non hanno lo stesso tag della porta.
+		if (!other.tag.Equals(tag))
+			return;
 
-	private void OnTriggerExit2D(Collider2D other)
-	{
-		Player player = other.gameObject.GetComponent<Player>();
-
-		if (player != null)
-			IsOpen = false;
+		
+		IsOpen = !IsOpen;
 	}
 }
